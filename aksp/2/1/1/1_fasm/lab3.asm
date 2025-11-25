@@ -1,0 +1,32 @@
+format ELF64 executable
+
+segment readable writeable
+    arr dw 12, 25, 33, 7, 19, 5, 100, 3, 8, 44
+    count = 10
+    result dw 0
+
+segment readable executable
+entry _start
+
+_start:
+    xor r8, r8          ; r8 = сумма остатков = 0
+    mov rcx, count      ; 10 элементов
+    mov rbx, arr        ; указатель на массив
+
+loop_start:
+    mov ax, [rbx]       ; AX = arr[i]
+    xor dx, dx          ; DX = 0 для div
+    mov si, 3
+    div si              ; AX/3, остаток в DX
+
+    movzx rdx, dx       ; расширили остаток
+    add r8, rdx         ; сумма += остаток
+
+    add rbx, 2
+    loop loop_start
+
+    mov [result], r8w   ; записать младшие 16 бит суммы
+
+    mov rax, 60
+    mov rdi, r8         ; результат как код возврата
+    syscall

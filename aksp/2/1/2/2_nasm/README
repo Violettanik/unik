@@ -1,0 +1,10 @@
+root@violettanik:/home/violettanik/Documents/unik/aksp/2/1/2# nano main.c 
+root@violettanik:/home/violettanik/Documents/unik/aksp/2/1/2# nano cyclic_shift.asm 
+root@violettanik:/home/violettanik/Documents/unik/aksp/2/1/2# nasm -f elf64 cyclic_shift.asm -o cyclic_shift.o 
+root@violettanik:/home/violettanik/Documents/unik/aksp/2/1/2# gcc -std=c11 -Wall main.c cyclic_shift.o -o lab2 
+root@violettanik:/home/violettanik/Documents/unik/aksp/2/1/2# ./lab2 10 
+Введите минимум диапазона случайных чисел (int32): 100 
+Введите максимум диапазона случайных чисел (int32): 1000 
+Введите величину циклического сдвига (k, может быть отрицательной): 3 
+Исходный массив: 993 702 790 439 957 766 792 522 738 379 Массив после циклического сдвига вправо на 3 позиций: 522 738 379 993 702 790 439 957 766 792 
+root@violettanik:/home/violettanik/Documents/unik/aksp/2/1/2#

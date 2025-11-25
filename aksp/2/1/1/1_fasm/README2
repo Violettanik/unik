@@ -1,0 +1,81 @@
+root@violettanik:/home/violettanik/Documents/unik/aksp/2# fasm lab3.asm
+flat assembler  version 1.73.27  (16384 kilobytes memory)
+3 passes, 261 bytes.
+root@violettanik:/home/violettanik/Documents/unik/aksp/2# readelf -h lab3 | grep Entry
+readelf: Error: Reading 4096 bytes extends past end of file for section headers
+  Entry point address:               0x4010c6
+root@violettanik:/home/violettanik/Documents/unik/aksp/2# gdb ./lab3
+GNU gdb (Ubuntu 12.1-0ubuntu1~22.04.2) 12.1
+Copyright (C) 2022 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./lab3...
+(No debugging symbols found in ./lab3)
+(gdb) break *0x4010c6
+Breakpoint 1 at 0x4010c6
+(gdb) run
+Starting program: /home/violettanik/Documents/unik/aksp/2/lab3 
+
+Breakpoint 1, 0x00000000004010c6 in ?? ()
+(gdb) disas $rip,+63
+Dump of assembler code from 0x4010c6 to 0x401105:
+=> 0x00000000004010c6:  xor    %r8,%r8
+   0x00000000004010c9:  mov    $0xa,%rcx
+   0x00000000004010d0:  mov    $0x4000b0,%rbx
+   0x00000000004010d7:  mov    (%rbx),%ax
+   0x00000000004010da:  xor    %dx,%dx
+   0x00000000004010dd:  mov    $0x3,%si
+   0x00000000004010e1:  div    %si
+   0x00000000004010e4:  movzwq %dx,%rdx
+   0x00000000004010e8:  add    %rdx,%r8
+   0x00000000004010eb:  add    $0x2,%rbx
+   0x00000000004010ef:  loop   0x4010d7
+   0x00000000004010f1:  mov    %r8w,-0x1035(%rip)        # 0x4000c4
+   0x00000000004010f9:  mov    $0x3c,%rax
+   0x0000000000401100:  mov    %r8,%rdi
+   0x0000000000401103:  syscall 
+End of assembler dump.
+(gdb) x/10uh 0x4000b0
+0x4000b0:  12  25  33  7  19  5  100  3
+0x4000c0:  8  44
+(gdb) break *0x00000000004010d0
+Breakpoint 2 at 0x4010d0
+(gdb) continue
+Continuing.
+
+Breakpoint 2, 0x00000000004010d0 in ?? ()
+(gdb) x/10uh 0x4000b0
+0x4000b0:  12  25  33  7  19  5  100  3
+0x4000c0:  8  44
+(gdb)  x/dh 0x4000c4
+0x4000c4:  0
+(gdb) info registers r8
+r8             0x0                 0
+(gdb) si
+
+(gdb) info registers r8
+r8             0xa                 10
+(gdb)  x/dh 0x4000c4
+0x4000c4:  0
+(gdb) break *0x00000000004010f9
+Breakpoint 4 at 0x4010f9
+(gdb) continue
+Continuing.
+
+Breakpoint 4, 0x00000000004010f9 in ?? ()
+(gdb) info registers r8
+r8             0xa                 10
+(gdb)  x/dh 0x4000c4
+0x4000c4:  10
+(gdb)

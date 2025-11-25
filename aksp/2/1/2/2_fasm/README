@@ -1,0 +1,172 @@
+fasm cyclic_shift.asm cyclic_shift.o
+gcc -std=c11 -Wall main.c cyclic_shift.o -o lab2
+readelf -h lab2 | grep Entry
+gdb ./lab2
+GNU gdb (Ubuntu 12.1-0ubuntu1~22.04.2) 12.1
+Copyright (C) 2022 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./lab2...
+(No debugging symbols found in ./lab2)
+(gdb)  break main
+Breakpoint 2 at 0x555555555201
+Warning:
+Cannot insert breakpoint 1.
+Cannot access memory at address 0x1110
+
+(gdb) break cyclic_shift
+Breakpoint 3 at 0x555555555648
+Warning:
+Cannot insert breakpoint 1.
+Cannot access memory at address 0x1110
+
+(gdb) run 5
+The program being debugged has been started already.
+Starting program: /home/violettanik/Documents/unik/aksp/2/1/2/2_fasm/lab2 5
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 2, 0x0000555555555201 in main ()
+(gdb) continue
+Continuing.
+Введите минимум диапазона случайных чисел (int32): 1
+Введите максимум диапазона случайных чисел (int32): 10
+Введите величину циклического сдвига (k, может быть отрицательной): 2
+
+Исходный массив:
+3 10 7 1 8 
+
+Breakpoint 3, 0x0000555555555648 in cyclic_shift ()
+(gdb) info registers rdi rsi rdx
+rdi            0x555555559ac0      93824992254656
+rsi            0x5                 5
+rdx            0x2                 2
+(gdb)  x/5wd $rdi
+0x555555559ac0:	3	10	7	1
+0x555555559ad0:	8
+(gdb) disas cyclic_shift
+Dump of assembler code for function cyclic_shift:
+=> 0x0000555555555648 <+0>:	cmp    $0x1,%rsi
+   0x000055555555564c <+4>:	jbe    0x555555555688 <cyclic_shift+64>
+   0x000055555555564e <+6>:	test   %rdx,%rdx
+   0x0000555555555651 <+9>:	je     0x555555555688 <cyclic_shift+64>
+   0x0000555555555653 <+11>:	mov    %rdx,%r8
+   0x0000555555555656 <+14>:	mov    %rsi,%rcx
+   0x0000555555555659 <+17>:	dec    %rcx
+   0x000055555555565c <+20>:	mov    %rcx,%r9
+   0x000055555555565f <+23>:	shl    $0x2,%rcx
+   0x0000555555555663 <+27>:	mov    (%rdi,%rcx,1),%eax
+   0x0000555555555666 <+30>:	mov    %r9,%rcx
+   0x0000555555555669 <+33>:	cmp    $0x0,%rcx
+   0x000055555555566d <+37>:	je     0x555555555681 <cyclic_shift+57>
+   0x000055555555566f <+39>:	mov    %rcx,%r10
+   0x0000555555555672 <+42>:	dec    %r10
+   0x0000555555555675 <+45>:	mov    (%rdi,%r10,4),%edx
+   0x0000555555555679 <+49>:	mov    %edx,(%rdi,%rcx,4)
+   0x000055555555567c <+52>:	dec    %rcx
+   0x000055555555567f <+55>:	jmp    0x555555555669 <cyclic_shift+33>
+   0x0000555555555681 <+57>:	mov    %eax,(%rdi)
+   0x0000555555555683 <+59>:	dec    %r8
+   0x0000555555555686 <+62>:	jne    0x555555555656 <cyclic_shift+14>
+   0x0000555555555688 <+64>:	ret    
+End of assembler dump.
+(gdb) break *0x0000555555555683
+Breakpoint 4 at 0x555555555683
+(gdb) continue
+Continuing.
+
+Breakpoint 4, 0x0000555555555683 in cyclic_shift ()
+(gdb) break *0x0000555555555679
+Breakpoint 5 at 0x555555555679
+(gdb) continue
+Continuing.
+
+Breakpoint 5, 0x0000555555555679 in cyclic_shift ()
+(gdb) info registers rcx r10 eax
+rcx            0x4                 4
+r10            0x3                 3
+eax            0x1                 1
+(gdb) x/5wd $rdi
+0x555555559ac0:	8	3	10	7
+0x555555559ad0:	1
+(gdb) stepi
+0x000055555555567c in cyclic_shift ()
+(gdb) x/5wd $rdi
+0x555555559ac0:	8	3	10	7
+0x555555559ad0:	7
+(gdb) stepi
+0x000055555555567f in cyclic_shift ()
+(gdb) x/5wd $rdi
+0x555555559ac0:	8	3	10	7
+0x555555559ad0:	7
+(gdb) stepi
+0x0000555555555669 in cyclic_shift ()
+(gdb) x/5wd $rdi
+0x555555559ac0:	8	3	10	7
+0x555555559ad0:	7
+(gdb) stepi
+0x000055555555566d in cyclic_shift ()
+(gdb) x/5wd $rdi
+0x555555559ac0:	8	3	10	7
+0x555555559ad0:	7
+(gdb) stepi
+0x000055555555566f in cyclic_shift ()
+(gdb) x/5wd $rdi
+0x555555559ac0:	8	3	10	7
+0x555555559ad0:	7
+(gdb) continue
+Continuing.
+
+Breakpoint 5, 0x0000555555555679 in cyclic_shift ()
+(gdb) x/5wd $rdi
+0x555555559ac0:	8	3	10	7
+0x555555559ad0:	7
+(gdb) continue
+Continuing.
+
+Breakpoint 5, 0x0000555555555679 in cyclic_shift ()
+(gdb) x/5wd $rdi
+0x555555559ac0:	8	3	10	10
+0x555555559ad0:	7
+(gdb) continue
+Continuing.
+
+Breakpoint 5, 0x0000555555555679 in cyclic_shift ()
+(gdb) x/5wd $rdi
+0x555555559ac0:	8	3	3	10
+0x555555559ad0:	7
+(gdb) continue
+Continuing.
+
+Breakpoint 4, 0x0000555555555683 in cyclic_shift ()
+(gdb) x/5wd $rdi
+0x555555559ac0:	1	8	3	10
+0x555555559ad0:	7
+(gdb) break *0x0000555555555688
+Breakpoint 6 at 0x555555555688
+(gdb) continue
+Continuing.
+
+Breakpoint 6, 0x0000555555555688 in cyclic_shift ()
+(gdb) x/5wd $rdi
+0x555555559ac0:	1	8	3	10
+0x555555559ad0:	7
+(gdb)  continue
+Continuing.
+
+Массив после циклического сдвига вправо на 2 позиций:
+1 8 3 10 7 
+[Inferior 1 (process 124549) exited normally]
+(gdb) 
+quit
