@@ -1,0 +1,3 @@
+as cyclic_shift_att.s -o cyclic_shift_att.o
+gcc -std=c11 -Wall main.c cyclic_shift_att.o -o lab2_att
+gdb ./lab2_att

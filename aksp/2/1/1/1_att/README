@@ -1,0 +1,3 @@
+as lab3_att.s -o lab3_att.o
+ld lab3_att.o -o lab3_att
+gdb ./lab3_att
